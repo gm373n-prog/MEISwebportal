@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MEIS Login</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}"
+         class="login-logo">
+
+    <h1>Muhammadan Educational Institute of Science</h1>
+
+    <p class="login-subtitle">
+
+        Excellence in Knowledge & Innovation
+
+    </p>
+
+    <h2>Login to Your Account</h2>
+
+    {% if error %}
+
+        <div class="error-box">
+
+            {{ error }}
+
+        </div>
+
+    {% endif %}
+
+    <form method="POST" autocomplete="off">
+
+<input
+    type="text"
+    name="username"
+    placeholder="Username or Email"
+    autocomplete="off"
+    required>
+
+<input
+    type="password"
+    name="password"
+    placeholder="Password"
+    autocomplete="new-password"
+    required>
+
+        <button type="submit">
+
+            Login
+
+        </button>
+
+    </form>
+
+    <a href="/" class="back-home">
+
+        ← Back to Home
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Us</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="page-header">
+
+    <a href="/">
+        <img src="{{ url_for('static', filename='images/logo.jpg') }}" class="page-logo">
+    </a>
+
+</div>
+
+<section class="page-banner">
+
+    <h1>Contact Us</h1>
+
+    <p>We're Here to Help You</p>
+
+</section>
+
+<section class="contact-section">
+
+    <div class="contact-card">
+
+        <h2>📍 Address</h2>
+
+        <p>
+            Muhammadan Educational Institute of Science<br>
+            Lahore, Pakistan
+        </p>
+
+    </div>
+
+    <div class="contact-card">
+
+        <h2>📞 Contact Number</h2>
+
+        <p>0304-2213582</p>
+
+    </div>
+
+    <div class="contact-card">
+
+      <h2>📧 Email</h2>
+
+      <p><strong>Email:</strong>g40834942@gmail.com</p>
+
+      <h3>👨‍💼 Principal</h3>
+      
+      <p><strong>Name:</strong> Muhammad Kashif Raza</p>
+
+    </div>
+
+
+    <div class="contact-card">
+
+        <h2>📚 Teaching Hours</h2>
+
+        <p>
+            Monday - Friday<br>
+            2:00 PM - 6:00 PM
+        </p>
+
+    </div>
+
+</section>
+
+<section class="contact-form">
+
+    <h2>Send Us a Message</h2>
+    
+    {% if success %}
+
+<p style="color:green;font-weight:bold;">
+
+✅ Your message has been sent successfully!
+
+</p>
+
+{% endif %}
+
+    <form method="POST">
+
+        <input
+        type="text"
+        name="name"
+        placeholder="Your Name"
+        required>
+
+        <input
+        type="email"
+        name="email"
+        placeholder="Your Email"
+        required>
+
+        <textarea
+        name="message"
+        rows="6"
+        placeholder="Write your message here..."
+        required></textarea>
+
+        <button type="submit">
+
+            Send Message
+
+        </button>
+
+    </form>
+
+</section>
+
+<footer>
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}"
+         class="footer-logo">
+
+    <h3>Muhammadan Educational Institute of Science</h3>
+
+    <p>Excellence in Knowledge & Innovation</p>
+
+</footer>
+
+</body>
+
+</html>

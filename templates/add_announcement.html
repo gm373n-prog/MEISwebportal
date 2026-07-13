@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Announcement</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <img src="{{ url_for('static', filename='images/logo.jpg') }}"
+         class="page-logo">
+
+    <h1>📢 Create New Announcement</h1>
+
+    <p class="form-subtitle">
+        Share important updates with students and teachers.
+    </p>
+
+    <div class="date-box">
+        Today's Date:
+        <strong id="todayDate"></strong>
+    </div>
+
+    <form method="POST">
+
+        <label>Announcement Title</label>
+
+        <input
+            type="text"
+            name="title"
+            placeholder="Example: Mid-Term Examination Schedule"
+            required>
+
+        <label>Announcement Description</label>
+
+        <textarea
+            id="announcementText"
+            name="description"
+            placeholder="Write your announcement here..."
+            rows="7"
+            maxlength="500"
+            required></textarea>
+
+        <small id="charCount">
+            0 / 500 Characters
+        </small>
+
+        <button type="submit">
+
+            📢 Publish Announcement
+
+        </button>
+
+    </form>
+
+    <div class="preview-box">
+
+        <h2>Announcement Preview</h2>
+
+        <h3 id="previewTitle">
+            Your title will appear here...
+        </h3>
+
+        <p id="previewDescription">
+            Your announcement description will appear here...
+        </p>
+
+    </div>
+
+    <a href="{{ url_for('principal_dashboard') }}"
+       class="back-home">
+
+        ← Back to Dashboard
+
+    </a>
+
+</div>
+
+<script>
+
+const titleInput=document.querySelector('input[name="title"]');
+
+const descInput=document.getElementById("announcementText");
+
+const previewTitle=document.getElementById("previewTitle");
+
+const previewDesc=document.getElementById("previewDescription");
+
+const charCount=document.getElementById("charCount");
+
+titleInput.addEventListener("input",()=>{
+
+previewTitle.textContent=titleInput.value || "Your title will appear here...";
+
+});
+
+descInput.addEventListener("input",()=>{
+
+previewDesc.textContent=descInput.value || "Your announcement description will appear here...";
+
+charCount.textContent=descInput.value.length+" / 500 Characters";
+
+});
+
+const today=new Date();
+
+document.getElementById("todayDate").textContent=
+today.toLocaleDateString();
+
+</script>
+
+</body>
+
+</html>

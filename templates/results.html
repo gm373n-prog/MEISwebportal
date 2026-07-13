@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>My Results</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<img src="{{ url_for('static', filename='images/logo.jpg') }}"
+class="page-logo">
+
+<h1>📊 My Results</h1>
+
+<h2>{{ session['name'] }}</h2>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+<tr>
+
+<th>Subject</th>
+<th>Marks</th>
+
+</tr>
+
+{% for subject, mark in marks.items() %}
+
+<tr>
+
+<td>{{ subject }}</td>
+
+<td>{{ mark }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<a href="{{ url_for('student_dashboard') }}"
+class="logout-btn">
+
+← Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

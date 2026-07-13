@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Subjects</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<img src="{{ url_for('static', filename='images/logo.jpg') }}"
+class="page-logo">
+
+<h1>📚 Institute Subjects</h1>
+
+<p class="dashboard-subtitle">
+Muhammadan Educational Institute of Science
+</p>
+
+<div class="dashboard-grid">
+
+<div class="dashboard-card">
+
+<h2>🎓 Class 9</h2>
+
+<p>
+Physics<br>
+Mathematics<br>
+Chemistry<br>
+Computer Science<br>
+English<br>
+Urdu<br>
+Tarjuma-tul-Quran<br>
+Islamiat
+</p>
+
+</div>
+
+<div class="dashboard-card">
+
+<h2>🎓 Class 10</h2>
+
+<p>
+Physics<br>
+Mathematics<br>
+Chemistry<br>
+Biology / Computer Science<br>
+English<br>
+Urdu<br>
+Tarjuma-tul-Quran<br>
+Pakistan Studies
+</p>
+
+</div>
+
+</div>
+
+<br>
+
+<a href="{{ url_for('principal_dashboard') }}"
+class="logout-btn">
+
+← Back to Dashboard
+
+</a>
+
+</div>
+
+</body>
+
+</html>

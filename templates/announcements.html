@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Announcements</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<section class="section">
+
+    <h2>Announcements</h2>
+
+    <div class="cards">
+
+        {% for announcement in announcements %}
+
+        <div class="card">
+
+            <h3>{{ announcement.title }}</h3>
+
+            <p>{{ announcement.description }}</p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+</body>
+
+</html>

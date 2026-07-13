@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Attendance Management</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<img src="{{ url_for('static', filename='images/logo.jpg') }}"
+class="page-logo">
+
+<h1>📅 Attendance Management</h1>
+
+<p class="dashboard-subtitle">
+
+Mark students Present or Absent.
+
+</p>
+
+<form method="POST">
+
+<table border="1" cellpadding="12" cellspacing="0" width="100%">
+
+<tr>
+
+<th>Student</th>
+<th>Class</th>
+<th>Status</th>
+
+</tr>
+
+{% for student in students %}
+
+<tr>
+
+<td>{{ student.name }}</td>
+
+<td>{{ student.class }}</td>
+
+<td>
+
+<select name="{{ student.username }}">
+
+<option value="Present"
+{% if student.attendance=="Present" %}selected{% endif %}>
+Present
+</option>
+
+<option value="Absent"
+{% if student.attendance=="Absent" %}selected{% endif %}>
+Absent
+</option>
+
+</select>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<button type="submit" class="logout-btn">
+
+💾 Save Attendance
+
+</button>
+
+</form>
+
+<br><br>
+
+<a href="{{ url_for('principal_dashboard') }}"
+class="logout-btn">
+
+← Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

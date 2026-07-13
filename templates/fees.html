@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Fees Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <h1>💰 Fees Management</h1>
+
+    <p class="dashboard-subtitle">
+        Change a student's fee status and click Save.
+    </p>
+
+    <form method="POST">
+
+    <table border="1" cellpadding="12" cellspacing="0" width="100%">
+
+        <tr>
+
+            <th>Student</th>
+
+            <th>Class</th>
+
+            <th>Fee Status</th>
+
+        </tr>
+
+        {% for student in students %}
+
+        <tr>
+
+            <td>{{ student.name }}</td>
+
+            <td>{{ student.class }}</td>
+
+            <td>
+
+                <select name="{{ student.username }}">
+
+                    <option value="Paid"
+                    {% if student.fee_status=="Paid" %}selected{% endif %}>
+                    Paid
+                    </option>
+
+                    <option value="Pending"
+                    {% if student.fee_status=="Pending" %}selected{% endif %}>
+                    Pending
+                    </option>
+
+                    <option value="New Admission"
+                    {% if student.fee_status=="New Admission" %}selected{% endif %}>
+                    New Admission
+                    </option>
+
+                </select>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <br>
+
+    <button type="submit" class="logout-btn">
+
+        💾 Save Changes
+
+    </button>
+
+    </form>
+
+    <br><br>
+
+    <a href="{{ url_for('principal_dashboard') }}"
+       class="logout-btn">
+
+        ← Back to Dashboard
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Teacher Information</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<img src="{{ url_for('static', filename='images/logo.jpg') }}"
+class="page-logo">
+
+<h1>👨‍🏫 Teacher Information</h1>
+
+<p class="dashboard-subtitle">
+
+Muhammadan Educational Institute of Science
+
+</p>
+
+<div class="dashboard-grid">
+
+<!-- Sir Kashif -->
+
+<div class="dashboard-card">
+
+<h3>👨‍💼</h3>
+
+<h2>Muhammad Kashif Raza</h2>
+
+<p><strong>Role:</strong> Principal & Teacher</p>
+
+<p><strong>Subjects:</strong></p>
+
+<p>
+Physics<br>
+Mathematics<br>
+Computer
+</p>
+
+<p><strong>Qualifications:</strong></p>
+
+<p>
+🥇 Gold Medalist in MPhil Physics<br>
+M.Sc. Mathematics<br>
+M.A. Islamiat<br>
+B.Ed.
+</p>
+
+<p style="color:green;font-weight:bold;">
+🟢 Active
+</p>
+
+</div>
+
+<!-- Miss Beenish -->
+
+<div class="dashboard-card">
+
+<h3>👩‍🏫</h3>
+
+<h2>Miss Beenish</h2>
+
+<p><strong>Subjects:</strong></p>
+
+<p>
+Chemistry<br>
+Biology<br>
+English
+</p>
+
+<p><strong>Qualifications:</strong></p>
+
+<p>
+MPhil Chemistry<br>
+M.A. Islamiat
+</p>
+
+<p style="color:green;font-weight:bold;">
+🟢 Active
+</p>
+
+</div>
+
+<!-- Miss Shaheen -->
+
+<div class="dashboard-card">
+
+<h3>👩‍🏫</h3>
+
+<h2>Miss Shaheen Naz Hashmi</h2>
+
+<p><strong>Subjects:</strong></p>
+
+<p>
+Islamiat<br>
+Pakistan Studies<br>
+Tarjuma-tul-Quran<br>
+Handwriting
+</p>
+
+<p><strong>Qualifications:</strong></p>
+
+<p>
+M.A. Urdu<br>
+M.A. Islamiat<br>
+B.Ed.<br>
+M.Ed.
+</p>
+
+<p style="color:green;font-weight:bold;">
+🟢 Active
+</p>
+
+</div>
+
+</div>
+
+<br>
+
+<a href="{{ url_for('principal_dashboard') }}"
+class="logout-btn">
+
+← Back to Dashboard
+
+</a>
+
+</div>
+
+</body>
+
+</html>
