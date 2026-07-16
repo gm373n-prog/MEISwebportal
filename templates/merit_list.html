@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Merit List</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>🏆 Merit List</h1>
+
+<form method="POST">
+
+<label><b>Select Class</b></label>
+
+<select name="selected_class" required>
+
+<option value="">Select Class</option>
+
+<option value="7th">7th</option>
+<option value="9th">9th</option>
+<option value="10th">10th</option>
+<option value="1st year">1st Year</option>
+<option value="2nd year">2nd Year</option>
+
+</select>
+
+<br><br>
+
+<label><b>Select Group</b></label>
+
+<select name="selected_group">
+
+<option value="General">General</option>
+<option value="Computer">Computer</option>
+<option value="Biology">Biology</option>
+<option value="Statistics">Statistics</option>
+
+</select>
+
+<br><br>
+
+<button class="logout-btn">
+
+Generate Merit List
+
+</button>
+
+</form>
+
+{% if merit %}
+
+<hr>
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+<tr>
+
+<th>Rank</th>
+
+<th>Student</th>
+
+<th>Percentage</th>
+
+</tr>
+
+{% for student in merit %}
+
+<tr>
+
+<td>{{ loop.index }}</td>
+
+<td>{{ student.name }}</td>
+
+<td>{{ student.percentage }}%</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endif %}
+
+<br>
+
+<a href="{{ url_for('principal_dashboard') }}"
+class="logout-btn">
+
+← Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

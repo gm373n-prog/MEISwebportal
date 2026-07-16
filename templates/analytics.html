@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Class Analytics</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>📊 Class Analytics</h1>
+
+<form method="POST">
+
+<label><b>Select Class</b></label>
+
+<select name="selected_class">
+
+<option value="7th">7th</option>
+<option value="9th">9th</option>
+<option value="10th">10th</option>
+<option value="1st year">1st Year</option>
+<option value="2nd year">2nd Year</option>
+
+</select>
+
+<br><br>
+
+<label><b>Select Group</b></label>
+
+<select name="selected_group">
+
+<option value="General">General</option>
+<option value="Computer">Computer</option>
+<option value="Biology">Biology</option>
+<option value="Statistics">Statistics</option>
+
+</select>
+
+<br><br>
+
+<button class="logout-btn">
+
+Generate Analytics
+
+</button>
+
+</form>
+
+{% if total_students > 0 %}
+
+<hr>
+
+<h2>👨‍🎓 Students : {{ total_students }}</h2>
+
+<h2>📈 Average : {{ average_percentage }}%</h2>
+
+<h2>🏆 Highest : {{ highest_percentage }}%</h2>
+
+<h2>📉 Lowest : {{ lowest_percentage }}%</h2>
+
+<h2>✅ Passed : {{ pass_students }}</h2>
+
+<h2>❌ Failed : {{ fail_students }}</h2>
+
+<h2>🎯 Pass Percentage : {{ pass_percentage }}%</h2>
+
+{% endif %}
+
+<br>
+
+<a href="{{ url_for('principal_dashboard') }}"
+class="logout-btn">
+
+← Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

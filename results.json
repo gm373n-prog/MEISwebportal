@@ -1,0 +1,20 @@
+{
+    "shahzain": {
+        "Mathematics": {
+            "Test 1": {
+                "status": "Present",
+                "obtained": "56",
+                "total": "60"
+            }
+        }
+    },
+    "subhan": {
+        "Physics": {
+            "Test 1": {
+                "status": "Present",
+                "obtained": "56",
+                "total": "80"
+            }
+        }
+    }
+}

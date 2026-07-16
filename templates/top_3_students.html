@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Top 3 Students</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<h1>🥇 Top 3 Students</h1>
+
+<form method="POST">
+
+<label>Select Class</label>
+
+<select name="selected_class">
+
+<option>7th</option>
+<option>9th</option>
+<option>10th</option>
+<option>1st year</option>
+<option>2nd year</option>
+
+</select>
+
+<br><br>
+
+<label>Select Group</label>
+
+<select name="selected_group">
+
+<option>General</option>
+<option>Computer</option>
+<option>Biology</option>
+<option>Statistics</option>
+
+</select>
+
+<br><br>
+
+<button class="logout-btn">
+
+Show Top 3
+
+</button>
+
+</form>
+
+{% if top3 %}
+
+<hr>
+
+<h2>🏆 Winners</h2>
+
+<h3>🥇 {{ top3[0].name }} — {{ top3[0].percentage }}%</h3>
+
+{% if top3|length > 1 %}
+<h3>🥈 {{ top3[1].name }} — {{ top3[1].percentage }}%</h3>
+{% endif %}
+
+{% if top3|length > 2 %}
+<h3>🥉 {{ top3[2].name }} — {{ top3[2].percentage }}%</h3>
+{% endif %}
+
+{% endif %}
+
+<br>
+
+<a href="{{ url_for('principal_dashboard') }}"
+class="logout-btn">
+
+← Back
+
+</a>
+
+</div>
+
+</body>
+
+</html>

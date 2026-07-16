@@ -35,7 +35,7 @@ Physics • Mathematics • Computer
 
 <div class="dashboard-card">
 <h3>👨‍🎓</h3>
-<h2>12</h2>
+<h2>16</h2>
 <p>Total Students</p>
 </div>
 
@@ -55,12 +55,13 @@ Physics • Mathematics • Computer
 
 </p>
 
-<div class="dashboard-grid">
+<div class="dashboard-grid"> 
 
-    <a href="{{ url_for('add_event') }}" class="dashboard-card">
-    <h3>📅 Add Event</h3>
-    <p>Create a new school event.</p>
-    </a>
+    <div class="dashboard-card">
+        <h3>📅 Add Event</h3>
+        <p>Create a new school event.</p>
+        <a href="{{ url_for('add_event') }}">Open</a>
+    </div>
 
     <div class="dashboard-card">
         <h3>👨‍🎓</h3>
@@ -102,13 +103,66 @@ Physics • Mathematics • Computer
 
 <h3>📊</h3>
 
-<h2>Results</h2>
+<h2>Result Cards</h2>
 
-<p>View all students' marks.</p>
+<p>View all students result cards.</p>
 
 <a href="{{ url_for('principal_results') }}">Open</a>
 
 </div>
+
+<div class="dashboard-card">
+
+    <h3>🏆</h3>
+
+    <h2>Merit List</h2>
+
+    <p>View class merit list and rankings.</p>
+
+    <a href="{{ url_for('merit_list') }}">Open</a>
+
+</div>
+
+<div class="dashboard-card">
+
+    <h3>🥇</h3>
+
+    <h2>Top 3 Students</h2>
+
+    <p>View the top three students in a class.</p>
+
+    <a href="{{ url_for('top3_students') }}">Open</a>
+
+</div>
+
+<div class="dashboard-card">
+
+<h3>📊</h3>
+
+<h2>Analytics</h2>
+
+<p>View class performance.</p>
+
+<a href="{{ url_for('analytics') }}">
+Open
+</a>
+
+</div>
+
+<div class="dashboard-card">
+
+<h3>📝</h3>
+
+<h2>Marks</h2>
+
+<p>Manage all students' marks.</p>
+
+<a href="{{ url_for('marks') }}">Open</a>
+
+</div>
+
+
+
 
     <div class="dashboard-card">
         <h3>📢</h3>
@@ -116,8 +170,6 @@ Physics • Mathematics • Computer
         <p>Add and manage announcements.</p>
         <a href="{{ url_for('add_announcement') }}">Open</a>
     </div>
-
-
 </div>
 
 <a class="logout-btn"

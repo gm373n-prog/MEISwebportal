@@ -3,12 +3,12 @@
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>Marks Entry</title>
+    <title>Marks Entry</title>
 
-<link rel="stylesheet"
-href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
@@ -16,76 +16,173 @@ href="{{ url_for('static', filename='css/style.css') }}">
 
 <div class="dashboard">
 
-<h1>📝 Marks Entry</h1>
+    <h1>📝 Marks Entry</h1>
 
-<h2>Welcome {{ session['name'] }}</h2>
+    <h2>Welcome {{ session['name'] }}</h2>
 
-<p class="dashboard-subtitle">
+    <p class="dashboard-subtitle">
+        Enter marks for your subjects.
+    </p>
 
-Enter marks for your subjects.
+    <form method="POST">
 
-</p>
+        <label><b>Select Class</b></label>
 
-<form method="POST">
+        <select name="selected_class" required>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+            <option value="">Select Class</option>
 
-<tr>
+            <option value="7th"
+            {% if selected_class=="7th" %}selected{% endif %}>7th</option>
 
-<th>Student</th>
+            <option value="9th"
+            {% if selected_class=="9th" %}selected{% endif %}>9th</option>
 
-{% for subject in subjects %}
-<th>{{ subject }}</th>
-{% endfor %}
+            <option value="10th"
+            {% if selected_class=="10th" %}selected{% endif %}>10th</option>
 
-</tr>
+            <option value="1st year"
+            {% if selected_class=="1st year" %}selected{% endif %}>1st Year</option>
 
-{% for student in students %}
+            <option value="2nd year"
+            {% if selected_class=="2nd year" %}selected{% endif %}>2nd Year</option>
 
-<tr>
+        </select>
 
-<td>{{ student.name }}</td>
+        <br><br>
 
-{% for subject in subjects %}
+        <label><b>Select Group</b></label>
 
-<td>
+        <select name="selected_group">
 
-<input
-type="number"
-name="{{ student.username }}_{{ subject }}"
-min="0"
-max="100"
-value="0"
-style="width:70px;">
+            <option value="General"
+            {% if selected_group=="General" %}selected{% endif %}>General</option>
 
-</td>
+            <option value="Computer"
+            {% if selected_group=="Computer" %}selected{% endif %}>Computer</option>
 
-{% endfor %}
+            <option value="Biology"
+            {% if selected_group=="Biology" %}selected{% endif %}>Biology</option>
 
-</tr>
+            <option value="Statistics"
+            {% if selected_group=="Statistics" %}selected{% endif %}>Statistics</option>
 
-{% endfor %}
+        </select>
 
-</table>
+        <br><br>
 
-<br>
+        <button type="submit"
+                name="action"
+                value="load"
+                class="logout-btn">
 
-<button type="submit" class="logout-btn">
+            🔍 Load Students
 
-💾 Save Marks
+        </button>
 
-</button>
+        <br><br>
 
-</form>
+        {% if students %}
 
-<br>
+        <label><b>Select Test</b></label>
 
-<a href="{{ url_for('teacher_dashboard') }}"
-class="logout-btn">
+        <select name="test">
 
-← Back
+            {% for i in range(1,101) %}
 
-</a>
+            <option value="Test {{ i }}">
+                Test {{ i }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+        <table border="1" cellpadding="10" cellspacing="0" width="100%">
+
+            <tr>
+
+                <th>Student</th>
+
+                {% for subject in subjects %}
+
+                <th>{{ subject }}</th>
+
+                {% endfor %}
+
+            </tr>
+
+            {% for student in students %}
+
+            <tr>
+
+                <td>{{ student.name }}</td>
+
+                {% for subject in subjects %}
+
+                <td>
+
+                    <select name="{{ student.username }}_{{ subject }}_status">
+
+                        <option value="Present">Present</option>
+
+                        <option value="Absent">Absent</option>
+
+                    </select>
+
+                    <br><br>
+
+                    <input
+                        type="number"
+                        name="{{ student.username }}_{{ subject }}_obtained"
+                        placeholder="Obt."
+                        min="0"
+                        style="width:55px;">
+
+                    /
+
+                    <input
+                        type="number"
+                        name="{{ student.username }}_{{ subject }}_total"
+                        placeholder="Total"
+                        min="1"
+                        style="width:55px;">
+
+                </td>
+
+                {% endfor %}
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+        <br>
+
+        <button type="submit"
+                name="action"
+                value="save"
+                class="logout-btn">
+
+            💾 Save Marks
+
+        </button>
+
+        {% endif %}
+
+    </form>
+
+    <br>
+
+    <a href="{{ url_for('principal_dashboard') }}"
+       class="logout-btn">
+
+        ← Back
+
+    </a>
 
 </div>
 

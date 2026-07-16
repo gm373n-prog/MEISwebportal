@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>All Student Results</title>
+    <title>Student Result Card</title>
 
-<link rel="stylesheet"
-href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
 
 </head>
 
@@ -16,61 +16,203 @@ href="{{ url_for('static', filename='css/style.css') }}">
 
 <div class="dashboard">
 
-<img src="{{ url_for('static', filename='images/logo.jpg') }}"
-class="page-logo">
+    <h1>📄 Student Result Card</h1>
 
-<h1>📊 Student Results</h1>
+    <form method="POST">
 
-<p class="dashboard-subtitle">
+        <label><b>Select Class</b></label>
 
-Muhammadan Educational Institute of Science
+        <select name="selected_class" required>
 
-</p>
+            <option value="">Select Class</option>
 
-<table border="1" cellpadding="10" cellspacing="0" width="100%">
+            <option value="7th"
+            {% if selected_class=="7th" %}selected{% endif %}>7th</option>
 
-<tr>
+            <option value="9th"
+            {% if selected_class=="9th" %}selected{% endif %}>9th</option>
 
-<th>Student</th>
+            <option value="10th"
+            {% if selected_class=="10th" %}selected{% endif %}>10th</option>
 
-{% for subject in subjects %}
+            <option value="1st year"
+            {% if selected_class=="1st year" %}selected{% endif %}>1st Year</option>
 
-<th>{{ subject }}</th>
+            <option value="2nd year"
+            {% if selected_class=="2nd year" %}selected{% endif %}>2nd Year</option>
 
-{% endfor %}
+        </select>
 
-</tr>
+        <br><br>
 
-{% for student in students %}
+        <label><b>Select Group</b></label>
 
-<tr>
+        <select name="selected_group">
 
-<td>{{ student.name }}</td>
+            <option value="General"
+            {% if selected_group=="General" %}selected{% endif %}>General</option>
 
-{% for subject in subjects %}
+            <option value="Computer"
+            {% if selected_group=="Computer" %}selected{% endif %}>Computer</option>
 
-<td>
+            <option value="Biology"
+            {% if selected_group=="Biology" %}selected{% endif %}>Biology</option>
 
-{{ student.marks.get(subject, "-") }}
+            <option value="Statistics"
+            {% if selected_group=="Statistics" %}selected{% endif %}>Statistics</option>
 
-</td>
+        </select>
 
-{% endfor %}
+        <br><br>
 
-</tr>
+        <button type="submit"
+                name="action"
+                value="load"
+                class="logout-btn">
 
-{% endfor %}
+            🔍 Load Students
 
-</table>
+        </button>
 
-<br>
+        <br><br>
 
-<a href="{{ url_for('principal_dashboard') }}"
-class="logout-btn">
+        <label><b>Select Student</b></label>
 
-← Back
+        <select name="student">
 
-</a>
+            <option value="">Select Student</option>
+
+            {% for student in students %}
+
+            <option value="{{ student.username }}"
+            {% if selected_student==student.username %}selected{% endif %}>
+
+                {{ student.name }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+        <button type="submit"
+                name="action"
+                value="generate"
+                class="logout-btn">
+
+            📄 Generate Result
+
+        </button>
+
+    </form>
+
+    {% if result %}
+
+    <hr>
+
+    <div id="result-card">
+
+        <center>
+
+            <img src="{{ url_for('static', filename='images/logo.jpg') }}"
+                 width="120">
+
+            <h2>Muhammadan Educational Institute</h2>
+
+            <h3>Student Result Card</h3>
+
+        </center>
+
+        <hr>
+
+        <p><b>Student:</b> {{ selected_student }}</p>
+
+        <p><b>Class:</b> {{ selected_class }}</p>
+
+        <p><b>Group:</b> {{ selected_group }}</p>
+
+        <table border="1"
+               cellpadding="10"
+               cellspacing="0"
+               width="100%">
+
+            <tr>
+
+                <th>Subject</th>
+
+                <th>Test</th>
+
+                <th>Status</th>
+
+                <th>Marks</th>
+
+            </tr>
+
+            {% for subject, tests in result.items() %}
+
+                {% for test, mark in tests.items() %}
+
+                <tr>
+
+                    <td>{{ subject }}</td>
+
+                    <td>{{ test }}</td>
+
+                    <td>{{ mark.status }}</td>
+
+                    <td>{{ mark.obtained }}/{{ mark.total }}</td>
+
+                </tr>
+
+                {% endfor %}
+
+            {% endfor %}
+
+        </table>
+
+        <br>
+
+        <h3>Total Obtained : {{ obtained_total }}</h3>
+
+        <h3>Total Marks : {{ grand_total }}</h3>
+
+        <h3>Percentage : {{ percentage }}%</h3>
+
+        <h3>Class Position : {{ position }}</h3>
+
+        {% if percentage >= 40 %}
+
+        <h2 style="color:green;">PASS ✅</h2>
+
+        {% else %}
+
+        <h2 style="color:red;">FAIL ❌</h2>
+
+        {% endif %}
+
+    </div>
+
+    <br>
+
+    <button onclick="window.print()"
+            class="logout-btn">
+
+        🖨 Print Result
+
+    </button>
+
+    {% endif %}
+
+    <br><br>
+
+    <a href="{{ url_for('principal_dashboard') }}"
+       class="logout-btn">
+
+        ← Back
+
+    </a>
 
 </div>
 

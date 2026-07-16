@@ -73,6 +73,29 @@ def save_attendance(data):
         json.dump(data, file, indent=4)
 
 # =====================================================
+# RESULTS
+# =====================================================
+
+def load_results():
+
+    try:
+
+        with open("results.json", "r") as file:
+
+            return json.load(file)
+
+    except:
+
+        return {}
+
+
+def save_results(data):
+
+    with open("results.json", "w") as file:
+
+        json.dump(data, file, indent=4)
+
+# =====================================================
 # MARKS SYSTEM
 # =====================================================
 
@@ -323,10 +346,97 @@ users = [
         "attendance": 0,
         "fee_status": "Unpaid"
     },
-    
-    
-
+    {
+        "username": "Qadan",
+        "email": "qadan@meis.edu.pk",
+        "password": "qadan123",
+        "role": "student",
+        "name": "Qadan",
+        "class": "2nd Year",
+        "group": "Statistics",
+        "attendance": 0,
+        "fee_status": "Unpaid"
+    },
+    {
+        "username": "shahzain",
+        "email": "Shahzain@meis.edu.pk",
+        "password": "Shahzain123",
+        "role": "student",
+        "name": "Shahzain",
+        "class": "9th",
+        "group": "Computer",
+        "attendance": 0,
+        "fee_status": "Unpaid"
+    },
+    {
+        "username": "Qirat",
+        "email": "Qirat@meis.edu.pk",
+        "password": "Qirat123",
+        "role": "student",
+        "name": "Qirat",
+        "class": "7th",
+        "group": "Computer",
+        "attendance": 0,
+        "fee_status": "Unpaid"
+    },
+     {
+        "username": "Ibrahim",
+        "email": "Ibrahim@meis.edu.pk",
+        "password": "Ibrahim123",
+        "role": "student",
+        "name": "Ibrahim",
+        "class": "1st Year",
+        "group": "Computer",
+        "attendance": 0,
+        "fee_status": "Unpaid"
+    },
 ]
+#======================================================#
+#CLASS SUBJECTS
+#======================================================#
+
+CLASS_SUBJECTS = {
+
+    ("7th", ""): [
+        "English",
+        "Urdu",
+        "Mathematics",
+        "Science",
+        "Islamiat"
+    ],
+
+    ("9th", "Computer"): [
+        "Computer",
+        "Physics",
+        "Mathematics",
+        "Chemistry",
+        "English",
+        "Urdu",
+        "Islamiat",
+        "Pakistan Studies",
+        "Tarjuma-tul-Quran"
+    ],
+
+    ("1st Year", "Computer"): [
+        "Computer",
+        "Physics",
+        "Mathematics",
+        "English",
+        "Urdu",
+        "Islamiat",
+        "Pakistan Studies"
+    ],
+
+    ("2nd Year", "Computer"): [
+        "Computer",
+        "Statistics",
+        "Mathematics",
+        "English",
+        "Urdu",
+        "Islamiat",
+        "Pakistan Studies"
+    ]
+}
 
 # =====================================================
 # HOME
@@ -712,76 +822,478 @@ def students():
 @app.route("/marks", methods=["GET", "POST"])
 def marks():
 
-    if session.get("role") not in ["teacher", "principal"]:
+    if session.get("role") != "principal":
         return redirect(url_for("login"))
 
     marks_data = load_marks()
 
-    if session.get("role") == "principal":
+    teacher_subjects = [
+        "Physics",
+        "Mathematics",
+        "Computer",
+        "Chemistry",
+        "Biology",
+        "English",
+        "Urdu",
+        "Islamiat",
+        "Tarjuma-tul-Quran",
+        "Pakistan Studies"
+    ]
 
-        teacher_subjects = [
-            "Physics",
-            "Mathematics",
-            "Computer",
-            "Chemistry",
-            "Biology",
-            "English",
-            "Urdu",
-            "Islamiat",
-            "Tarjuma-tul-Quran",
-            "Pakistan Studies"
-        ]
-
-    else:
-
-        teacher_subjects = []
-
-        for user in users:
-
-            if (
-                user["role"] == "teacher"
-                and user["name"] == session.get("name")
-            ):
-
-                teacher_subjects = user.get("subjects", [])
-                break
-
+    selected_class = ""
+    selected_group = "General"
     student_list = []
 
-    for user in users:
+    display_subjects = teacher_subjects
 
-        if user["role"] == "student":
+    if request.method == "POST":
+
+        selected_class = request.form.get("selected_class", "")
+        selected_group = request.form.get("selected_group", "General")
+        action = request.form.get("action")
+
+        # -----------------------------
+        # Subjects according to Group
+        # -----------------------------
+        if selected_group == "Computer":
+
+            display_subjects = [
+                "Physics",
+                "Mathematics",
+                "Computer",
+                "Chemistry",
+                "English",
+                "Urdu",
+                "Islamiat",
+                "Tarjuma-tul-Quran",
+                "Pakistan Studies"
+            ]
+
+        elif selected_group == "Biology":
+
+            display_subjects = [
+                "Physics",
+                "Chemistry",
+                "Biology",
+                "English",
+                "Urdu",
+                "Islamiat",
+                "Tarjuma-tul-Quran",
+                "Pakistan Studies"
+            ]
+
+        # -----------------------------
+        # Load Students
+        # -----------------------------
+        for user in users:
+
+            if user["role"] != "student":
+                continue
+
+            if selected_class and user.get("class") != selected_class:
+                continue
+
+            if (
+                selected_group != "General"
+                and user.get("group") != selected_group
+            ):
+                continue
 
             student = user.copy()
             student["marks"] = marks_data.get(student["username"], {})
             student_list.append(student)
 
-    if request.method == "POST":
+        # -----------------------------
+        # Save Marks
+        # -----------------------------
+        if action == "save":
 
-        for student in student_list:
+            test_name = request.form.get("test")
 
-            username = student["username"]
+            for student in student_list:
 
-            if username not in marks_data:
-                marks_data[username] = {}
+                username = student["username"]
 
-            for subject in teacher_subjects:
+                if username not in marks_data:
+                    marks_data[username] = {}
 
-                value = request.form.get(
-                    f"{username}_{subject}",
-                    "0"
-                )
+                for subject in display_subjects:
 
-                marks_data[username][subject] = int(value)
+                    status = request.form.get(
+                        f"{username}_{subject}_status",
+                        "Present"
+                    )
 
-        save_marks(marks_data)
+                    obtained = request.form.get(
+                        f"{username}_{subject}_obtained",
+                        ""
+                    )
 
-        return redirect(url_for("marks"))
+                    total = request.form.get(
+                        f"{username}_{subject}_total",
+                        ""
+                    )
+
+                    if subject not in marks_data[username]:
+                        marks_data[username][subject] = {}
+
+                    marks_data[username][subject][test_name] = {
+                        "status": status,
+                        "obtained": obtained,
+                        "total": total
+                    }
+
+            save_marks(marks_data)
+
+            return redirect(url_for("marks"))
 
     return render_template(
         "marks.html",
         students=student_list,
-        subjects=teacher_subjects
+        subjects=display_subjects,
+        selected_class=selected_class,
+        selected_group=selected_group
+    )
+
+# =====================================================
+# PRINCIPAL RESULTS
+# =====================================================
+@app.route("/principal_results", methods=["GET", "POST"])
+def principal_results():
+
+    if session.get("role") != "principal":
+        return redirect(url_for("login"))
+
+    marks_data = load_marks()
+
+    selected_class = ""
+    selected_group = "General"
+    selected_student = ""
+
+    students = []
+
+    result = None
+    obtained_total = 0
+    grand_total = 0
+    percentage = 0
+    position = None
+    student_name = ""
+
+    if request.method == "POST":
+
+        action = request.form.get("action")
+
+        selected_class = request.form.get("selected_class", "")
+        selected_group = request.form.get("selected_group", "General")
+        selected_student = request.form.get("student", "")
+
+        # -----------------------------
+        # Load Students
+        # -----------------------------
+        for user in users:
+
+            if user["role"] != "student":
+                continue
+
+            if selected_class and user.get("class") != selected_class:
+                continue
+
+            if (
+                selected_group != "General"
+                and user.get("group") != selected_group
+            ):
+                continue
+
+            students.append(user)
+
+        # -----------------------------
+        # Generate Result
+        # -----------------------------
+        if action == "generate" and selected_student:
+
+            for stu in students:
+
+                if stu["username"] == selected_student:
+
+                    student_name = stu["name"]
+                    break
+
+            result = marks_data.get(selected_student, {})
+
+            # -----------------------------
+            # Subjects according to Group
+            # -----------------------------
+            if selected_group == "Computer":
+
+                allowed_subjects = [
+                    "Physics",
+                    "Mathematics",
+                    "Computer",
+                    "Chemistry",
+                    "English",
+                    "Urdu",
+                    "Islamiat",
+                    "Tarjuma-tul-Quran",
+                    "Pakistan Studies"
+                ]
+
+            elif selected_group == "Biology":
+
+                allowed_subjects = [
+                    "Physics",
+                    "Chemistry",
+                    "Biology",
+                    "English",
+                    "Urdu",
+                    "Islamiat",
+                    "Tarjuma-tul-Quran",
+                    "Pakistan Studies"
+                ]
+
+            else:
+
+                allowed_subjects = list(result.keys())
+
+            result = {
+                subject: result[subject]
+                for subject in allowed_subjects
+                if subject in result
+            }
+
+            # -----------------------------
+            # Calculate Totals
+            # -----------------------------
+            for subject, tests in result.items():
+
+                for test, mark in tests.items():
+
+                    if mark.get("status") == "Present":
+
+                        obtained_total += int(mark.get("obtained") or 0)
+                        grand_total += int(mark.get("total") or 0)
+
+            if grand_total > 0:
+
+                percentage = round(
+                    (obtained_total / grand_total) * 100,
+                    2
+                )
+
+            # -----------------------------
+            # Calculate Class Position
+            # -----------------------------
+            percentages = []
+
+            for stu in students:
+
+                stu_marks = marks_data.get(
+                    stu["username"],
+                    {}
+                )
+
+                obt = 0
+                tot = 0
+
+                for subject, tests in stu_marks.items():
+
+                    for test, mark in tests.items():
+
+                        if mark.get("status") == "Present":
+
+                            obt += int(mark.get("obtained") or 0)
+                            tot += int(mark.get("total") or 0)
+
+                if tot > 0:
+
+                    per = round((obt / tot) * 100, 2)
+
+                else:
+
+                    per = 0
+
+                percentages.append(
+                    (
+                        stu["username"],
+                        per
+                    )
+                )
+
+            percentages.sort(
+                key=lambda x: x[1],
+                reverse=True
+            )
+
+            for i, item in enumerate(percentages):
+
+                if item[0] == selected_student:
+
+                    position = i + 1
+                    break
+
+    return render_template(
+        "principal_results.html",
+        students=students,
+        result=result,
+        student_name=student_name,
+        selected_class=selected_class,
+        selected_group=selected_group,
+        selected_student=selected_student,
+        obtained_total=obtained_total,
+        grand_total=grand_total,
+        percentage=percentage,
+        position=position
+    )
+
+# =====================================================
+# MERIT LIST
+# =====================================================
+@app.route("/merit_list", methods=["GET", "POST"])
+def merit_list():
+
+    if session.get("role") != "principal":
+        return redirect(url_for("login"))
+
+    marks_data = load_marks()
+
+    selected_class = ""
+    selected_group = "General"
+
+    merit = []
+
+    if request.method == "POST":
+
+        selected_class = request.form.get("selected_class", "")
+        selected_group = request.form.get("selected_group", "General")
+
+        for user in users:
+
+            if user["role"] != "student":
+                continue
+
+            if selected_class and user["class"] != selected_class:
+                continue
+
+            if (
+                selected_group != "General"
+                and user.get("group") != selected_group
+            ):
+                continue
+
+            stu_marks = marks_data.get(
+                user["username"],
+                {}
+            )
+
+            obtained = 0
+            total = 0
+
+            for subject, tests in stu_marks.items():
+
+                for test, mark in tests.items():
+
+                    if mark.get("status") == "Present":
+
+                        obtained += int(mark.get("obtained") or 0)
+                        total += int(mark.get("total") or 0)
+
+            if total > 0:
+
+                percentage = round(
+                    (obtained / total) * 100,
+                    2
+                )
+
+            else:
+
+                percentage = 0
+
+            merit.append({
+
+                "name": user["name"],
+                "percentage": percentage
+
+            })
+
+        merit.sort(
+            key=lambda x: x["percentage"],
+            reverse=True
+        )
+
+    return render_template(
+        "merit_list.html",
+        merit=merit,
+        selected_class=selected_class,
+        selected_group=selected_group
+    )
+
+# =====================================================
+# TOP 3 STUDENTS
+# =====================================================
+@app.route("/top3_students", methods=["GET", "POST"])
+def top3_students():
+
+    if session.get("role") != "principal":
+        return redirect(url_for("login"))
+
+    marks_data = load_marks()
+
+    selected_class = ""
+    selected_group = "General"
+
+    top3 = []
+
+    if request.method == "POST":
+
+        selected_class = request.form.get("selected_class", "")
+        selected_group = request.form.get("selected_group", "General")
+
+        percentages = []
+
+        for user in users:
+
+            if user["role"] != "student":
+                continue
+
+            if selected_class and user["class"] != selected_class:
+                continue
+
+            if (
+                selected_group != "General"
+                and user.get("group") != selected_group
+            ):
+                continue
+
+            marks = marks_data.get(user["username"], {})
+
+            obtained = 0
+            total = 0
+
+            for subject in marks.values():
+
+                for mark in subject.values():
+
+                    if mark.get("status") == "Present":
+
+                        obtained += int(mark.get("obtained") or 0)
+                        total += int(mark.get("total") or 0)
+
+            percentage = round((obtained / total) * 100, 2) if total else 0
+
+            percentages.append({
+                "name": user["name"],
+                "percentage": percentage
+            })
+
+        percentages.sort(
+            key=lambda x: x["percentage"],
+            reverse=True
+        )
+
+        top3 = percentages[:3]
+
+    return render_template(
+        "top3_students.html",
+        top3=top3
     )
 
 # =====================================================
@@ -806,49 +1318,108 @@ def results():
     )
 
 # =====================================================
-# PRINCIPAL RESULTS
+# CLASS ANALYTICS
 # =====================================================
-
-@app.route("/principal_results")
-def principal_results():
+@app.route("/analytics", methods=["GET", "POST"])
+def analytics():
 
     if session.get("role") != "principal":
         return redirect(url_for("login"))
 
     marks_data = load_marks()
 
-    subjects = [
-        "Physics",
-        "Mathematics",
-        "Computer",
-        "Chemistry",
-        "Biology",
-        "English",
-        "Urdu",
-        "Islamiat",
-        "Tarjuma-tul-Quran",
-        "Pakistan Studies"
-    ]
+    selected_class = ""
+    selected_group = "General"
 
-    student_list = []
+    total_students = 0
+    average_percentage = 0
+    highest_percentage = 0
+    lowest_percentage = 0
+    pass_students = 0
+    fail_students = 0
+    pass_percentage = 0
 
-    for user in users:
+    if request.method == "POST":
 
-        if user["role"] == "student":
+        selected_class = request.form.get("selected_class", "")
+        selected_group = request.form.get("selected_group", "General")
 
-            student = user.copy()
+        percentages = []
 
-            student["marks"] = marks_data.get(
-                student["username"],
-                {}
+        for user in users:
+
+            if user["role"] != "student":
+                continue
+
+            if selected_class and user.get("class") != selected_class:
+                continue
+
+            if (
+                selected_group != "General"
+                and user.get("group") != selected_group
+            ):
+                continue
+
+            total_students += 1
+
+            stu_marks = marks_data.get(user["username"], {})
+
+            obtained = 0
+            total = 0
+
+            for subject, tests in stu_marks.items():
+
+                for test, mark in tests.items():
+
+                    if mark.get("status") == "Present":
+
+                        obtained += int(mark.get("obtained") or 0)
+                        total += int(mark.get("total") or 0)
+
+            if total > 0:
+
+                per = round((obtained / total) * 100, 2)
+
+            else:
+
+                per = 0
+
+            percentages.append(per)
+
+            if per >= 40:
+
+                pass_students += 1
+
+            else:
+
+                fail_students += 1
+
+        if percentages:
+
+            average_percentage = round(
+                sum(percentages) / len(percentages),
+                2
             )
 
-            student_list.append(student)
+            highest_percentage = max(percentages)
+            lowest_percentage = min(percentages)
+
+        if total_students > 0:
+
+            pass_percentage = round(
+                (pass_students / total_students) * 100,
+                2
+            )
 
     return render_template(
-        "principal_results.html",
-        students=student_list,
-        subjects=subjects
+        "analytics.html",
+        total_students=total_students,
+        average_percentage=average_percentage,
+        highest_percentage=highest_percentage,
+        lowest_percentage=lowest_percentage,
+        pass_students=pass_students,
+        fail_students=fail_students,
+        pass_percentage=pass_percentage
     )
 
 # =====================================================
