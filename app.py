@@ -3,7 +3,9 @@ import json
 import os
 import smtplib
 from email.message import EmailMessage
+import resend
 
+resend.api_key = "re_Knz7FQQK_21gBCZUsuCQQssRY7nU4cQzA"
 app = Flask(__name__)
 app.secret_key = "MEIS_2026_SECRET_KEY"
 EMAIL_ADDRESS = "g40834942@gmail.com"
@@ -466,10 +468,6 @@ def about():
 
     return render_template("about.html")
 
-# =====================================================
-# CONTACT
-# =====================================================
-
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
 
@@ -479,42 +477,30 @@ def contact():
         email = request.form["email"]
         message = request.form["message"]
 
-        msg = EmailMessage()
-
-        msg["Subject"] = "New Website Contact Message"
-        msg["From"] = EMAIL_ADDRESS
-        msg["To"] = "g40834942@gmail.com"
-
-        msg.set_content(
-            f"""
+        try:
+            resend.Emails.send({
+                "from": "onboarding@resend.dev",
+                "to": ["g40834942@gmail.com@gmail.com"],
+                "subject": "New Website Contact Message",
+                "text": f"""
 Name: {name}
 
 Email: {email}
 
 Message:
-
 {message}
 """
-        )
+            })
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-
-            smtp.login(
-                EMAIL_ADDRESS,
-                EMAIL_APP_PASSWORD
+            return render_template(
+                "contact.html",
+                success=True
             )
 
-            smtp.send_message(msg)
+        except Exception as e:
+            return f"Error: {e}"
 
-        return render_template(
-            "contact.html",
-            success=True
-        )
-
-    return render_template(
-        "contact.html"
-    )
-
+    return render_template("contact.html")
 # =====================================================
 # EVENTS
 # =====================================================
