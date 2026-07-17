@@ -335,7 +335,7 @@ users = [
         "class": "9th",
         "group": "Computer",
         "attendance": 0,
-        "fee_status": "Unpaid"
+        "fee_status": "Paid"
     },
     {
         "username": "shehryar",
@@ -346,7 +346,7 @@ users = [
         "class": "9th",
         "group": "Computer",
         "attendance": 0,
-        "fee_status": "Unpaid"
+        "fee_status": "Paid"
     },
     {
         "username": "Qadan",
@@ -357,7 +357,7 @@ users = [
         "class": "2nd Year",
         "group": "Statistics",
         "attendance": 0,
-        "fee_status": "Unpaid"
+        "fee_status": "Paid"
     },
     {
         "username": "shahzain",
@@ -368,7 +368,7 @@ users = [
         "class": "9th",
         "group": "Computer",
         "attendance": 0,
-        "fee_status": "Unpaid"
+        "fee_status": "Paidd"
     },
     {
         "username": "Qirat",
@@ -379,7 +379,7 @@ users = [
         "class": "7th",
         "group": "Computer",
         "attendance": 0,
-        "fee_status": "Unpaid"
+        "fee_status": "Paid"
     },
      {
         "username": "Ibrahim",
@@ -390,7 +390,7 @@ users = [
         "class": "1st Year",
         "group": "Computer",
         "attendance": 0,
-        "fee_status": "Unpaid"
+        "fee_status": "Paid"
     },
 ]
 #======================================================#
@@ -803,6 +803,76 @@ def students():
     )
 
 # =====================================================
+# SUBJECTS BY CLASS & GROUP
+# =====================================================
+
+def get_subjects(student_class, group):
+
+    # 7th
+    if student_class == "7th":
+        return [
+            "English",
+            "Urdu",
+            "Mathematics",
+            "General Science",
+            "Islamiat",
+            "Pakistan Studies",
+            "Tarjuma-tul-Quran"
+        ]
+
+    # 9th & 10th Computer
+    elif student_class in ["9th", "10th"] and group == "Computer":
+        return [
+            "English",
+            "Urdu",
+            "Physics",
+            "Mathematics",
+            "Computer",
+            "Chemistry",
+            "Islamiat",
+            "Pakistan Studies",
+            "Tarjuma-tul-Quran"
+        ]
+
+    # 9th & 10th Biology
+    elif student_class in ["9th", "10th"] and group == "Biology":
+        return [
+            "English",
+            "Urdu",
+            "Physics",
+            "Chemistry",
+            "Biology",
+            "Islamiat",
+            "Pakistan Studies",
+            "Tarjuma-tul-Quran"
+        ]
+
+    # 1st Year Computer
+    elif student_class == "1st Year":
+        return [
+            "English",
+            "Urdu",
+            "Physics",
+            "Mathematics",
+            "Computer",
+            "Pakistan Studies",
+            "Tarjuma-tul-Quran"
+        ]
+
+    # 2nd Year Statistics
+    elif student_class == "2nd Year" and group == "Statistics":
+        return [
+            "English",
+            "Urdu",
+            "Physics",
+            "Mathematics",
+            "Statistics",
+            "Pakistan Studies",
+            "Tarjuma-tul-Quran"
+        ]
+
+    return []
+# =====================================================
 # MARKS
 # =====================================================
 @app.route("/marks", methods=["GET", "POST"])
@@ -841,32 +911,10 @@ def marks():
         # -----------------------------
         # Subjects according to Group
         # -----------------------------
-        if selected_group == "Computer":
-
-            display_subjects = [
-                "Physics",
-                "Mathematics",
-                "Computer",
-                "Chemistry",
-                "English",
-                "Urdu",
-                "Islamiat",
-                "Tarjuma-tul-Quran",
-                "Pakistan Studies"
-            ]
-
-        elif selected_group == "Biology":
-
-            display_subjects = [
-                "Physics",
-                "Chemistry",
-                "Biology",
-                "English",
-                "Urdu",
-                "Islamiat",
-                "Tarjuma-tul-Quran",
-                "Pakistan Studies"
-            ]
+        display_subjects = get_subjects(
+            selected_class,
+            selected_group
+)
 
         # -----------------------------
         # Load Students
@@ -997,6 +1045,7 @@ def principal_results():
         # -----------------------------
         if action == "generate" and selected_student:
 
+            # Student Name
             for stu in students:
 
                 if stu["username"] == selected_student:
@@ -1007,38 +1056,12 @@ def principal_results():
             result = marks_data.get(selected_student, {})
 
             # -----------------------------
-            # Subjects according to Group
+            # Subjects According to Class
             # -----------------------------
-            if selected_group == "Computer":
-
-                allowed_subjects = [
-                    "Physics",
-                    "Mathematics",
-                    "Computer",
-                    "Chemistry",
-                    "English",
-                    "Urdu",
-                    "Islamiat",
-                    "Tarjuma-tul-Quran",
-                    "Pakistan Studies"
-                ]
-
-            elif selected_group == "Biology":
-
-                allowed_subjects = [
-                    "Physics",
-                    "Chemistry",
-                    "Biology",
-                    "English",
-                    "Urdu",
-                    "Islamiat",
-                    "Tarjuma-tul-Quran",
-                    "Pakistan Studies"
-                ]
-
-            else:
-
-                allowed_subjects = list(result.keys())
+            allowed_subjects = get_subjects(
+                selected_class,
+                selected_group
+            )
 
             result = {
                 subject: result[subject]
@@ -1055,8 +1078,13 @@ def principal_results():
 
                     if mark.get("status") == "Present":
 
-                        obtained_total += int(mark.get("obtained") or 0)
-                        grand_total += int(mark.get("total") or 0)
+                        obtained_total += int(
+                            mark.get("obtained") or 0
+                        )
+
+                        grand_total += int(
+                            mark.get("total") or 0
+                        )
 
             if grand_total > 0:
 
@@ -1066,7 +1094,7 @@ def principal_results():
                 )
 
             # -----------------------------
-            # Calculate Class Position
+            # Calculate Position
             # -----------------------------
             percentages = []
 
@@ -1080,21 +1108,31 @@ def principal_results():
                 obt = 0
                 tot = 0
 
-                for subject, tests in stu_marks.items():
+                stu_subjects = get_subjects(
+                    stu.get("class"),
+                    stu.get("group", "General")
+                )
 
-                    for test, mark in tests.items():
+                for subject in stu_subjects:
+
+                    if subject not in stu_marks:
+                        continue
+
+                    for test, mark in stu_marks[subject].items():
 
                         if mark.get("status") == "Present":
 
-                            obt += int(mark.get("obtained") or 0)
-                            tot += int(mark.get("total") or 0)
+                            obt += int(
+                                mark.get("obtained") or 0
+                            )
+
+                            tot += int(
+                                mark.get("total") or 0
+                            )
 
                 if tot > 0:
-
                     per = round((obt / tot) * 100, 2)
-
                 else:
-
                     per = 0
 
                 percentages.append(
@@ -1156,7 +1194,7 @@ def merit_list():
             if user["role"] != "student":
                 continue
 
-            if selected_class and user["class"] != selected_class:
+            if selected_class and user.get("class") != selected_class:
                 continue
 
             if (
@@ -1173,14 +1211,30 @@ def merit_list():
             obtained = 0
             total = 0
 
-            for subject, tests in stu_marks.items():
+            # -----------------------------
+            # Get Correct Subjects
+            # -----------------------------
+            subjects = get_subjects(
+                user.get("class"),
+                user.get("group", "General")
+            )
 
-                for test, mark in tests.items():
+            for subject in subjects:
+
+                if subject not in stu_marks:
+                    continue
+
+                for test, mark in stu_marks[subject].items():
 
                     if mark.get("status") == "Present":
 
-                        obtained += int(mark.get("obtained") or 0)
-                        total += int(mark.get("total") or 0)
+                        obtained += int(
+                            mark.get("obtained") or 0
+                        )
+
+                        total += int(
+                            mark.get("total") or 0
+                        )
 
             if total > 0:
 
@@ -1196,6 +1250,8 @@ def merit_list():
             merit.append({
 
                 "name": user["name"],
+                "class": user.get("class"),
+                "group": user.get("group", "General"),
                 "percentage": percentage
 
             })
@@ -1240,7 +1296,7 @@ def top3_students():
             if user["role"] != "student":
                 continue
 
-            if selected_class and user["class"] != selected_class:
+            if selected_class and user.get("class") != selected_class:
                 continue
 
             if (
@@ -1249,25 +1305,51 @@ def top3_students():
             ):
                 continue
 
-            marks = marks_data.get(user["username"], {})
+            stu_marks = marks_data.get(
+                user["username"],
+                {}
+            )
 
             obtained = 0
             total = 0
 
-            for subject in marks.values():
+            # -----------------------------
+            # Correct Subjects
+            # -----------------------------
+            subjects = get_subjects(
+                user.get("class"),
+                user.get("group", "General")
+            )
 
-                for mark in subject.values():
+            for subject in subjects:
+
+                if subject not in stu_marks:
+                    continue
+
+                for test, mark in stu_marks[subject].items():
 
                     if mark.get("status") == "Present":
 
-                        obtained += int(mark.get("obtained") or 0)
-                        total += int(mark.get("total") or 0)
+                        obtained += int(
+                            mark.get("obtained") or 0
+                        )
 
-            percentage = round((obtained / total) * 100, 2) if total else 0
+                        total += int(
+                            mark.get("total") or 0
+                        )
+
+            percentage = (
+                round((obtained / total) * 100, 2)
+                if total else 0
+            )
 
             percentages.append({
+
                 "name": user["name"],
+                "class": user.get("class"),
+                "group": user.get("group", "General"),
                 "percentage": percentage
+
             })
 
         percentages.sort(
@@ -1278,10 +1360,11 @@ def top3_students():
         top3 = percentages[:3]
 
     return render_template(
-        "top3_students.html",
-        top3=top3
+        "top_3_students.html",
+        top3=top3,
+        selected_class=selected_class,
+        selected_group=selected_group
     )
-
 # =====================================================
 # STUDENT RESULTS
 # =====================================================
@@ -1348,23 +1431,45 @@ def analytics():
 
             total_students += 1
 
-            stu_marks = marks_data.get(user["username"], {})
+            stu_marks = marks_data.get(
+                user["username"],
+                {}
+            )
 
             obtained = 0
             total = 0
 
-            for subject, tests in stu_marks.items():
+            # -----------------------------
+            # Correct Subjects
+            # -----------------------------
+            subjects = get_subjects(
+                user.get("class"),
+                user.get("group", "General")
+            )
 
-                for test, mark in tests.items():
+            for subject in subjects:
+
+                if subject not in stu_marks:
+                    continue
+
+                for test, mark in stu_marks[subject].items():
 
                     if mark.get("status") == "Present":
 
-                        obtained += int(mark.get("obtained") or 0)
-                        total += int(mark.get("total") or 0)
+                        obtained += int(
+                            mark.get("obtained") or 0
+                        )
+
+                        total += int(
+                            mark.get("total") or 0
+                        )
 
             if total > 0:
 
-                per = round((obtained / total) * 100, 2)
+                per = round(
+                    (obtained / total) * 100,
+                    2
+                )
 
             else:
 
@@ -1373,11 +1478,8 @@ def analytics():
             percentages.append(per)
 
             if per >= 40:
-
                 pass_students += 1
-
             else:
-
                 fail_students += 1
 
         if percentages:
