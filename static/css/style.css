@@ -1130,3 +1130,12 @@ font-size:17px;
     font-size:17px;
 
 }
+@media (max-width:600px){
+
+.hero-image{
+
+    height:150px;
+
+}
+
+}
