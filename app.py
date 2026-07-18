@@ -205,6 +205,17 @@ users = [
         "Computer"
     ]
 },
+    {
+        "username": "Qirat",
+        "email": "Qirat@meis.edu.pk",
+        "password": "Qirat123",
+        "role": "student",
+        "name": "Qirat",
+        "class": "7th",
+        "group": "Computer",
+        "attendance": 0,
+        "fee_status": "Paid"
+    },
 
     {
     "username": "kaleemullah",
@@ -337,6 +348,7 @@ users = [
         "attendance": 0,
         "fee_status": "Paid"
     },
+
     {
         "username": "shehryar",
         "email": "shehryar@meis.edu.pk",
@@ -345,17 +357,6 @@ users = [
         "name": "Shehryar",
         "class": "9th",
         "group": "Computer",
-        "attendance": 0,
-        "fee_status": "Paid"
-    },
-    {
-        "username": "Qadan",
-        "email": "qadan@meis.edu.pk",
-        "password": "qadan123",
-        "role": "student",
-        "name": "Qadan",
-        "class": "2nd Year",
-        "group": "Statistics",
         "attendance": 0,
         "fee_status": "Paid"
     },
@@ -369,18 +370,8 @@ users = [
         "group": "Computer",
         "attendance": 0,
         "fee_status": "Paidd"
-    },
-    {
-        "username": "Qirat",
-        "email": "Qirat@meis.edu.pk",
-        "password": "Qirat123",
-        "role": "student",
-        "name": "Qirat",
-        "class": "7th",
-        "group": "Computer",
-        "attendance": 0,
-        "fee_status": "Paid"
-    },
+    },    
+
      {
         "username": "Ibrahim",
         "email": "Ibrahim@meis.edu.pk",
@@ -389,6 +380,18 @@ users = [
         "name": "Ibrahim",
         "class": "1st Year",
         "group": "Computer",
+        "attendance": 0,
+        "fee_status": "Paid"
+    },
+    
+    {
+        "username": "Qadan",
+        "email": "qadan@meis.edu.pk",
+        "password": "qadan123",
+        "role": "student",
+        "name": "Qadan",
+        "class": "2nd Year",
+        "group": "Statistics",
         "attendance": 0,
         "fee_status": "Paid"
     },
@@ -589,11 +592,32 @@ def login():
 def principal_dashboard():
 
     if session.get("role") != "principal":
-
+        
         return redirect(url_for("login"))
 
-    return render_template("principal_dashboard.html")
+    total_students = sum(
+        1 for user in users
+        if user["role"] == "student"
+    )
 
+    total_teachers = sum(
+        1 for user in users
+        if user["role"] == "teacher"
+    )
+
+    total_subjects = len({
+        subject
+        for user in users
+        if user["role"] == "teacher"
+        for subject in user.get("subjects", [])
+    })
+
+    return render_template(
+        "principal_dashboard.html",
+        total_students=total_students,
+        total_teachers=total_teachers,
+        total_subjects=total_subjects
+    )
 
 # =====================================================
 # ADD ANNOUNCEMENT
@@ -791,11 +815,28 @@ def students():
     if session.get("role") not in ["teacher", "principal"]:
         return redirect(url_for("login"))
 
+    fees_data = load_fees()
+    attendance_data = load_attendance()
+
     student_list = []
 
     for user in users:
+
         if user["role"] == "student":
-            student_list.append(user)
+
+            student = user.copy()
+
+            student["fee_status"] = fees_data.get(
+                student["username"],
+                "Pending"
+            )
+
+            student["attendance"] = attendance_data.get(
+                student["username"],
+                "Not Marked"
+            )
+
+            student_list.append(student)
 
     return render_template(
         "students.html",
@@ -911,10 +952,10 @@ def marks():
         # -----------------------------
         # Subjects according to Group
         # -----------------------------
+
         display_subjects = get_subjects(
             selected_class,
-            selected_group
-)
+            selected_group)
 
         # -----------------------------
         # Load Students

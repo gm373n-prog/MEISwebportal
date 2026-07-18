@@ -34,7 +34,7 @@ Muhammadan Educational Institute of Science
 <th>Name</th>
 <th>Class</th>
 <th>Group</th>
-<th>Attendance</th>
+<th>Today's Attendance</th>
 <th>Fee Status</th>
 
 </tr>
@@ -49,7 +49,13 @@ Muhammadan Educational Institute of Science
 
 <td>{{ student.group }}</td>
 
-<td>{{ student.attendance }}%</td>
+<td>
+{% if student.attendance == "Present" %}
+🟢 Present
+{% else %}
+🔴 Absent
+{% endif %}
+</td>
 
 <td>{{ student.fee_status }}</td>
 
@@ -61,12 +67,25 @@ Muhammadan Educational Institute of Science
 
 <br>
 
+{% if session["role"] == "principal" %}
+
+<a href="{{ url_for('principal_dashboard') }}"
+   class="logout-btn">
+
+← Back to Principal Dashboard
+
+</a>
+
+{% else %}
+
 <a href="{{ url_for('teacher_dashboard') }}"
-class="logout-btn">
+   class="logout-btn">
 
 ← Back to Teacher Dashboard
 
 </a>
+
+{% endif %}
 
 </div>
 
