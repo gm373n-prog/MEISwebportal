@@ -5,7 +5,7 @@ import smtplib
 from email.message import EmailMessage
 import resend
 
-resend.api_key = "re_avUG6sS3_RF3RP9ADgCWqSUCjMT9c7fbW"
+resend.api_key = "re_RXx2iwED_JhrTBF55wVXLbVbUKDw4icKR"
 app = Flask(__name__)
 app.secret_key = "MEIS_2026_SECRET_KEY"
 EMAIL_ADDRESS = "g40834942@gmail.com"
