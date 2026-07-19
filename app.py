@@ -5,8 +5,7 @@ import smtplib
 from email.message import EmailMessage
 import resend
 
-resend.api_key = "re_avUG6sS3_RF3RP9ADgCWqSUCjMT9c7fbWgit add ." \
-"git "
+resend.api_key = "re_avUG6sS3_RF3RP9ADgCWqSUCjMT9c7fbW"
 app = Flask(__name__)
 app.secret_key = "MEIS_2026_SECRET_KEY"
 EMAIL_ADDRESS = "g40834942@gmail.com"
@@ -484,7 +483,7 @@ def contact():
         try:
             resend.Emails.send({
                 "from": "onboarding@resend.dev",
-                "to": ["g40834942@gmail.com@gmail.com"],
+                "to": ["g40834942@gmail.com"],
                 "subject": "New Website Contact Message",
                 "text": f"""
 Name: {name}
